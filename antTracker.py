@@ -7,10 +7,17 @@ import numpy as np
 import cv2
 
 camera = cv2.VideoCapture("/home/seth/openCV_Tests/Exploring_openCV/cut.mp4")
+mask = cv2.imread('mask.png')
 tracker = cv2.MultiTracker("KCF")
+file = open("tracks.txt","w+")
 init_once = False
 meas=[]
 mp = np.array((2,1), np.float32) # measurement
+
+##################################################################################################
+# MASK STUFF 
+
+x_offset=y_offset= 0
 
 ##################################################################################################
 
@@ -44,13 +51,13 @@ opened = 0
 
 ##################################################################################################
 
-#  Start from frame 350 to avoid the third ant walking by
-camera.set(1,0)
-
 #  Bounding box parameters
-length = 15
+length = 14
 width = 10
-frame = 5
+frame = 0
+
+#  Start from frame 350 to avoid the third ant walking by
+camera.set(1,frame)
 
 ##################################################################################################
 
@@ -61,6 +68,9 @@ def vectorize(A, B):
 
 while camera.isOpened():
     ok, image = camera.read()
+    frame = frame + 1
+    #places the mask on the top left corner
+    image[y_offset:y_offset+mask.shape[0], x_offset:x_offset+mask.shape[1]] = mask
     keypoints = detector.detect(image)
     if opened <= 1:
         for keyPoint in keypoints:
@@ -82,9 +92,15 @@ while camera.isOpened():
 
     ok, boxes = tracker.update(image)
 
- ##################################################################################################
-    
-
+###################################################################################################  
+# This is to write in file.... seems a bit too much to do this loop twice. 
+    cnt = 0
+    for newbox in boxes:
+        cnt = cnt + 1
+        # Left top most point
+        A = (int(newbox[0]), int(newbox[1]))
+        # Write to file
+        file.write("Frame: %d Id: %d %d,%d\r\n" % (frame, cnt, A[0]+7,A[1]+7))
 
 ##################################################################################################
 
@@ -105,7 +121,6 @@ while camera.isOpened():
         # inside = 0
         print len(keypoints)
         for newbox in boxes:
-
             # Left top most point
             A = (int(newbox[0]), int(newbox[1]))
             # Right top most point
@@ -142,6 +157,8 @@ while camera.isOpened():
                     bbox = (0, 0, 15, 15)
                     tracker = cv2.MultiTracker("KCF")
                     ok = tracker.add(image, bbox)
+                    file.write("RESET\r\n")
+
                 else:
                     if len(keypoints) > 1:
                         x = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
@@ -152,12 +169,15 @@ while camera.isOpened():
                         bbox2 = (x1, y1, 15,15)
                         tracker = cv2.MultiTracker("KCF")
                         ok = tracker.add(image, (bbox1,bbox2))
+                        file.write("RESET\r\n")
                     else :
                         x = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
                         y = int(keypoints[0].pt[1] - 5)
                         bbox1 = (x, y, 15,15)
                         tracker = cv2.MultiTracker("KCF")
                         ok = tracker.add(image, bbox1)
+                        file.write("RESET\r\n")
+
 
 ##################################################################################################
 
@@ -180,10 +200,8 @@ while camera.isOpened():
 
     if key == 27: 
         break
-    frame = frame + 1
-    print "Frame: ", frame
-    print "\n"
 ##################################################################################################
 
 camera.release()
 camera.destroyAllWindows()
+file.close()
