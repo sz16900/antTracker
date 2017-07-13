@@ -45,7 +45,7 @@ opened = 0
 ##################################################################################################
 
 #  Start from frame 350 to avoid the third ant walking by
-camera.set(1,350)
+camera.set(1,0)
 
 #  Bounding box parameters
 length = 15
@@ -84,42 +84,80 @@ while camera.isOpened():
 
  ##################################################################################################
     
-    for keyPoint in keypoints:
-	    x = int(keyPoint.pt[0]) #i is the index of the blob you want to get the position
-	    y = int(keyPoint.pt[1])
-	    M = [x,y]
-	    mp = np.array([[np.float32(x)],[np.float32(y)]])
-	    # meas.append((x,y))
-	    # Is this point inside any of the squares??
-	    outside = 0
+
 
 ##################################################################################################
 
-	    for newbox in boxes:
+# SO, FOR NOW, i CAN DETECT THAT AN ANT IS OUTSIDE OF ITS BOUNDING BOX, I RESET THE THING AND MOVE ON
+# NOW i NEED TO FIGURE OUT A WAY TO KEEP THEIR IDS
 
-	    	# Left top most point
-	        A = (int(newbox[0]), int(newbox[1]))
-	    	# Right top most point
-	        B = (int(newbox[0] + 15), int(newbox[1]))
-	    	# Right bottom most point
-	        C = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
-	        # Draw rectangle image
-	        cv2.rectangle(image, A, C, (200,100,0))
-			# https://math.stackexchange.com/questions/190111/how-to-check-if-a-point-is-inside-a-rectangle
-			# https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
-	        if (0 <= np.dot(vectorize(A,B), vectorize(A,M)) <= np.dot(vectorize(A,B), vectorize(A,B))) and \
-	           (0 <= np.dot(vectorize(B,C), vectorize(B,M)) <= np.dot(vectorize(B,C), vectorize(B,C))):
+
+	# https://math.stackexchange.com/questions/190111/how-to-check-if-a-point-is-inside-a-rectangle
+	# https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
+    for keyPoint in keypoints:
+        x = int(keyPoint.pt[0]) #i is the index of the blob you want to get the position
+        y = int(keyPoint.pt[1])
+        M = [x,y]
+        # mp = np.array([[np.float32(x)],[np.float32(y)]])
+        # meas.append((x,y))
+        # Is this point inside any of the squares??
+        outside = 0
+        # inside = 0
+        print len(keypoints)
+        for newbox in boxes:
+
+            # Left top most point
+            A = (int(newbox[0]), int(newbox[1]))
+            # Right top most point
+            B = (int(newbox[0] + 15), int(newbox[1]))
+            # Right bottom most point
+            C = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
+            # Draw rectangle image
+            cv2.rectangle(image, A, C, (200,100,0))
+            if (0 <= np.dot(vectorize(A,B), vectorize(A,M)) <= np.dot(vectorize(A,B), vectorize(A,B))) and \
+               (0 <= np.dot(vectorize(B,C), vectorize(B,M)) <= np.dot(vectorize(B,C), vectorize(B,C))):
     			print True
-	        else:
+            else:
     			print False
     			outside = outside + 1
-    			if outside == len(boxes):
-    				# I need to somehow restart the tracker
-    				while True:
-						key2 = cv2.waitKey(1) or 0xff
-						cv2.imshow("Keypoints", im_with_keypoints)
-						if key2 == ord('p'):
-							break
+                # keypoints = detector.detect(image)
+                # im_with_keypoints = cv2.drawKeypoints(image, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+                # cv2.rectangle(image, A, C, (200,100,0))
+        # This is to say that if there are more or less thatn 2 ants, then skip .... just checking        
+        if len(keypoints) != 2:
+            print "Next"
+            # Thhis numbers are magic, they need to be dynamic
+        else:
+            if outside == 2:
+                # while True:
+                #     key2 = cv2.waitKey(1) or 0xff
+                #     cv2.imshow("tracking", image)
+                #     if key2 == ord('p'):
+                #         break
+                # I need to somehow restart the tracker
+                # keypoints = detector.detect(image)
+                # if detector fails
+                # I need to find a way to keep the ones that are ok and only reset the one that I lost.
+                if len(keypoints) == 0:
+                    bbox = (0, 0, 15, 15)
+                    tracker = cv2.MultiTracker("KCF")
+                    ok = tracker.add(image, bbox)
+                else:
+                    if len(keypoints) > 1:
+                        x = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
+                        y = int(keypoints[0].pt[1] - 5)
+                        bbox1 = (x, y, 15,15)
+                        x1 = int(keypoints[1].pt[0] - 5) #i is the index of the blob you want to get the position
+                        y1 = int(keypoints[1].pt[1] - 5)
+                        bbox2 = (x1, y1, 15,15)
+                        tracker = cv2.MultiTracker("KCF")
+                        ok = tracker.add(image, (bbox1,bbox2))
+                    else :
+                        x = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
+                        y = int(keypoints[0].pt[1] - 5)
+                        bbox1 = (x, y, 15,15)
+                        tracker = cv2.MultiTracker("KCF")
+                        ok = tracker.add(image, bbox1)
 
 ##################################################################################################
 
@@ -147,5 +185,5 @@ while camera.isOpened():
     print "\n"
 ##################################################################################################
 
-cap.release()
-cv2.destroyAllWindows()
+camera.release()
+camera.destroyAllWindows()
