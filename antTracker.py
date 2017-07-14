@@ -97,11 +97,11 @@ while camera.isOpened():
 # This is to write in file.... seems a bit too much to do this loop twice. 
     cnt = 0
     for newbox in boxes:
-        cnt = cnt + 1
         # Left top most point
         A = (int(newbox[0]), int(newbox[1]))
         # Write to file
         file.write("%d %d %d %d\r\n" % (frame, cnt, A[0]+7, A[1]+7))
+        cnt = cnt + 1
 
 ##################################################################################################
 
