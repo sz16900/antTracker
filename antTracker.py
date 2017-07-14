@@ -10,6 +10,7 @@ camera = cv2.VideoCapture("/home/seth/openCV_Tests/Exploring_openCV/cut.mp4")
 mask = cv2.imread('mask.png')
 tracker = cv2.MultiTracker("KCF")
 file = open("tracks.txt","w+")
+file.write("FRAME   ID  X   Y\r\n")
 init_once = False
 meas=[]
 mp = np.array((2,1), np.float32) # measurement
@@ -100,7 +101,7 @@ while camera.isOpened():
         # Left top most point
         A = (int(newbox[0]), int(newbox[1]))
         # Write to file
-        file.write("Frame: %d Id: %d %d,%d\r\n" % (frame, cnt, A[0]+7,A[1]+7))
+        file.write("%d %d %d %d\r\n" % (frame, cnt, A[0]+7, A[1]+7))
 
 ##################################################################################################
 
