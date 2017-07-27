@@ -12,15 +12,34 @@ fileName = "tracks.txt"
 # Euclidean function
 def myEuclidean(before, after):
 	finalIdDict = {}
+	
+	bigDict = {}
+	x = list()
 
 	for key, value in before.iteritems():
-		afterDist = {}
+		smallDict = list()
+		total = 0
 		# I think that there should be some check here, but for now it seems to be working as it is
 		for keyAft, valueAft in after.iteritems():
-			afterDist[keyAft] = distance.euclidean(before[key], after[keyAft])
-		# get the corresponding id
-		after[min(afterDist, key=afterDist.get)] = key
 
+			i = distance.euclidean(value, valueAft)
+			total += i
+			smallDict.append(i)
+			# afterDist[keyAft] = i
+
+		# get the corresponding id
+		finalIdDict[key] = smallDict.index(min(smallDict))
+		smallDict.append(total)
+		bigDict[key] = smallDict
+
+		# after[min(afterDist, key=afterDist.get)] = key
+
+	print finalIdDict
+
+	# This one checks if two or more points share the same id (obviously, this needs to be dynamic)
+	
+	print bigDict
+	exit()
 	return after
 
 # For now, I am only going to put two because I know it
@@ -101,29 +120,6 @@ def transcribe(finalIdDict):
 			intList = map(int, line.strip().split())
 			intList[1] = finalIdDict[intList[1]]
 			t.write("%d %d %d %d\r\n" % (intList[0], intList[1], intList[2], intList[3]))
-
-
-			# # for now, I know its two, but it needs to be dynaimc
-			# if finalIdArray[0][0] == 0 and finalIdArray[0][1] == 0:
-			# 	if switch == 0:
-			# 		intList[1] = theIds[0]
-			# 		t.write("%d %d %d %d\r\n" % (intList[0], intList[1], intList[2], intList[3]))
-			# 		switch += 1
-			# 	elif switch == 1:
-			# 		intList[1] = theIds[1]
-			# 		t.write("%d %d %d %d\r\n" % (intList[0], intList[1], intList[2], intList[3]))
-			# 		switch -= 1
-
-			# # This is not very dynamic. This needs to change. 
-			# else:
-			# 	if switch == 0:
-			# 		intList[1] = finalIdArray[0][0]
-			# 		t.write("%d %d %d %d\r\n" % (intList[0], intList[1], intList[2], intList[3]))
-			# 		switch += 1
-			# 	elif switch == 1:
-			# 		intList[1] = finalIdArray[0][1]
-			# 		t.write("%d %d %d %d\r\n" % (intList[0], intList[1], intList[2], intList[3]))
-			# 		switch -= 1
 		else:
 			t.write(line)
 
