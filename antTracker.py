@@ -65,7 +65,7 @@ camera.set(1,frame)
 ##################################################################################################
 
 def vectorize(A, B):
-	return (B[0]-A[0],B[1]-A[1])
+    return (B[0]-A[0],B[1]-A[1])
 
 ##################################################################################################
 
@@ -111,113 +111,113 @@ while camera.isOpened():
 # NOW i NEED TO FIGURE OUT A WAY TO KEEP THEIR IDS
 
 
-	# https://math.stackexchange.com/questions/190111/how-to-check-if-a-point-is-inside-a-rectangle
-	# https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
+    # https://math.stackexchange.com/questions/190111/how-to-check-if-a-point-is-inside-a-rectangle
+    # https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
 
     centerPointBox = {}
-    cnt = 0
-    keyPointList = {}
 
-    for keyPoint in keypoints:
-        x = int(keyPoint.pt[0]) #i is the index of the blob you want to get the position
-        y = int(keyPoint.pt[1])
-        M = [x,y]
-        # mp = np.array([[np.float32(x)],[np.float32(y)]])
-        # meas.append((x,y))
-        # Is this point inside any of the squares??
-        outside = 0
-        # inside = 0
-        print len(keypoints)
-        antNum = 0
-        for newbox in boxes:
+    # For now, I leave this at to just as a reference. I am using two ants anyways.
+    if len(keypoints) == 2:
 
-            # This is to get the center point
-            A = (int(newbox[0]), int(newbox[1]))
-            centerPointBox[cnt] = [A[0]+7, A[1]+7]
-            cnt += 1
+        for keyPoint in keypoints:
+            x = int(keyPoint.pt[0]) #i is the index of the blob you want to get the position
+            y = int(keyPoint.pt[1])
+            M = [x,y]
+            
+            outside = 0
+            antNum = 0
+            cnt = 0
+            for newbox in boxes:
 
-            antNum += 1
-            # Left top most point
-            A = (int(newbox[0]), int(newbox[1]))
-            # Right top most point
-            B = (int(newbox[0] + 15), int(newbox[1]))
-            # Right bottom most point
-            C = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
-            # Draw rectangle image depending on the id of the ant
-            if antNum == 1:
-                cv2.rectangle(image, A, C, (0,0,255))
-            if antNum == 2:
-                cv2.rectangle(image, A, C, (0,0,0))
-            if (0 <= np.dot(vectorize(A,B), vectorize(A,M)) <= np.dot(vectorize(A,B), vectorize(A,B))) and \
-               (0 <= np.dot(vectorize(B,C), vectorize(B,M)) <= np.dot(vectorize(B,C), vectorize(B,C))):
-    			print True
-            else:
-    			print False
-    			outside = outside + 1
-                # keypoints = detector.detect(image)
-                # im_with_keypoints = cv2.drawKeypoints(image, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-                # cv2.rectangle(image, A, C, (200,100,0))
+                # This is to get the center point
+                A = (int(newbox[0]), int(newbox[1]))
+                centerPointBox[cnt] = [A[0]+7, A[1]+7]
+                cnt += 1
 
-        # This is to say that if there are more or less thatn 2 ants, then skip .... just checking        
-        if len(keypoints) != 2:
-            print "Next"
+                antNum += 1
+                # Left top most point
+                A = (int(newbox[0]), int(newbox[1]))
+                # Right top most point
+                B = (int(newbox[0] + 15), int(newbox[1]))
+                # Right bottom most point
+                C = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
+                # Draw rectangle image depending on the id of the ant
+                if antNum == 1:
+                    cv2.rectangle(image, A, C, (0,0,255))
+                if antNum == 2:
+                    cv2.rectangle(image, A, C, (0,0,0))
+
+
+                # Check if the keyPoint is inside any of the boxes
+                if (0 <= np.dot(vectorize(A,B), vectorize(A,M)) <= np.dot(vectorize(A,B), vectorize(A,B))) and \
+                   (0 <= np.dot(vectorize(B,C), vectorize(B,M)) <= np.dot(vectorize(B,C), vectorize(B,C))):
+                    print True
+
+                # If it is outside, increment by one. This to make sure that it is trully outside as sometimes the ant could still be
+                # inside its box
+                else:
+                    print False
+                    outside = outside + 1
+                    
+
+            # This is to say that if there are more or less thatn 2 ants, then skip .... just checking        
+            if len(keypoints) != 2:
+                print "Next"
+            
             # These numbers are magic, they need to be dynamic
-        else:
-            if outside == 2:
-                print "RESET: ", frame
-                # while True:
-                #     key2 = cv2.waitKey(1) or 0xff
-                #     cv2.imshow("tracking", image)
-                #     if key2 == ord('p'):
-                #         break
-                # I need to somehow restart the tracker
-                # keypoints = detector.detect(image)
-                # if detector fails
-                # I need to find a way to keep the ones that are ok and only reset the one that I lost.
-                
+            else:
+                if outside == len(keypoints):
+                    print "RESET: ", frame
+                    
 
-                keyPointList = {}
-                cnt2 = 0
-                for keyPoint2 in keypoints:
-                    x = int(keyPoint2.pt[0]) #i is the index of the blob you want to get the position
-                    y = int(keyPoint2.pt[1])
-                    M = [x,y]
-                    keyPointList[cnt2] = M
-                    cnt2 += 1
+                    keyPointList = {}
+                    keyPointListTemp = {}
+                    cnt2 = 0
+                    for keyPoint2 in keypoints:
+                        x = int(keyPoint2.pt[0]) #i is the index of the blob you want to get the position
+                        y = int(keyPoint2.pt[1])
+                        M = [x,y]
+                        keyPointList[cnt2] = M
+                        cnt2 += 1
 
-                print "Box Benter: ", centerPointBox
-                print "Keypoints: ", keyPointList
-                smallDict = list()
+                    print "Box Center: ", centerPointBox
+                    print "Keypoints: ", keyPointList
+                    for key, value in centerPointBox.iteritems():
+                        smallDict = list()
+                        for keyAft, valueAft in keyPointList.iteritems():
 
-                for key, value in centerPointBox.iteritems():
-                    for keyAft, valueAft in keyPointList.iteritems():
+                            i = distance.euclidean(value, valueAft)
+                            smallDict.append(i)
 
-                        i = distance.euclidean(value, valueAft)
-                        smallDict.append(i)
-                print smallDict
+                        # get the index of the min distance. This is based on their position. Needs to be
+                        # better as it only assumes. Its quite greedy
+                        keyPointListTemp[key] = keyPointList[smallDict.index(min(smallDict))]
+                   
+                    print "Keypoints Temp: ", keyPointListTemp
 
+                    # if two points are the same, keep it as it was before
+                    # FOR NOW, I AM KEEPING JUST FOR THE FIRST ELEMTS. THIS NEES TO BE CHANGED ACCORDINGLY
+                    if keyPointListTemp[0][0] == keyPointListTemp[1][0]:
+                        x = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
+                        y = int(keypoints[1].pt[1] - 5)
+                        bbox1 = (x, y, 15,15)
+                        x1 = int(keypoints[1].pt[1] - 5) #i is the index of the blob you want to get the position
+                        y1 = int(keypoints[1].pt[1] - 5)
+                        bbox2 = (x1, y1, 15,15)
+                        
 
-                exit()
-
-                # if len(keypoints) > 1:
-                x = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
-                y = int(keypoints[0].pt[1] - 5)
-                bbox1 = (x, y, 15,15)
-                x1 = int(keypoints[1].pt[0] - 5) #i is the index of the blob you want to get the position
-                y1 = int(keypoints[1].pt[1] - 5)
-                bbox2 = (x1, y1, 15,15)
-                tracker = cv2.MultiTracker("KCF")
-                ok = tracker.add(image, (bbox1,bbox2))
-                file.write("RESET\r\n")
-
-
-                # else :
-                #     x = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
-                #     y = int(keypoints[0].pt[1] - 5)
-                #     bbox1 = (x, y, 15,15)
-                #     tracker = cv2.MultiTracker("KCF")
-                #     ok = tracker.add(image, bbox1)
-                #     file.write("RESET\r\n")
+                    # Else, update the nex boxes
+                    else:
+                        x = keyPointListTemp[0][0] - 5 #i is the index of the blob you want to get the position
+                        y = keyPointListTemp[0][1] - 5
+                        bbox1 = (x, y, 15,15)
+                        x1 = keyPointListTemp[1][0] - 5 #i is the index of the blob you want to get the position
+                        y1 = keyPointListTemp[1][1] - 5
+                        bbox2 = (x1, y1, 15,15)
+                    
+                    tracker = cv2.MultiTracker("KCF")
+                    ok = tracker.add(image, (bbox1,bbox2))
+                    ok, boxes = tracker.update(image)
 
 
 ##################################################################################################
@@ -232,10 +232,10 @@ while camera.isOpened():
     if key == ord('p'):
 
         while True:
-        	key2 = cv2.waitKey(1) or 0xff
-        	cv2.imshow("Keypoints", im_with_keypoints)
-        	if key2 == ord('p'):
-        		break
+            key2 = cv2.waitKey(1) or 0xff
+            cv2.imshow("Keypoints", im_with_keypoints)
+            if key2 == ord('p'):
+                break
 
     cv2.imshow("Keypoints", im_with_keypoints)
 
