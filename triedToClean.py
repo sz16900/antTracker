@@ -59,7 +59,7 @@ opened = 0
 ##################################################################################################
 
 # Bounding box parameters
-length = 15
+length = 14
 width = 10
 frame = 0
 
@@ -126,39 +126,45 @@ while camera.isOpened():
     # https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
 
     centerPointBox = {}
+    keyPointList = {}
+    outside = 0
+
 
     # For now, I leave this at to just as a reference. I am using two ants anyways.
     if len(keypoints) == len(boxes):
 
+        cnt = 0
         for keyPoint in keypoints:
             x = int(keyPoint.pt[0]) #i is the index of the blob you want to get the position
             y = int(keyPoint.pt[1])
             M = [x,y]
-            
-            outside = 0
-            antNum = 0
-            cnt = 0
+            keyPointList[cnt] = M
+            cnt += 1
+
+        for key, M in keyPointList.iteritems():
 
             # Loop the tracking boxes (should be the same number of keypoints)
+            cnt = 0
+            antNum = 0
             for newbox in boxes:
-
-                antNum += 1
-
+                
                 # Left top most point
                 A = (int(newbox[0]), int(newbox[1]))
-                # Add the center point of the tracking boxes (the # 7 is because the boxes are length in size)
+                # Add the center point of the tracking boxes (the # 7 is because the boxes are 15 in size)
                 centerPointBox[cnt] = [A[0]+7, A[1]+7]
-                cnt += 1
                 # Right top most point
-                B = (int(newbox[0] + length), int(newbox[1]))
+                B = (int(newbox[0] + 15), int(newbox[1]))
                 # Right bottom most point
                 C = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
 
                 # Draw rectangle image depending on the id of the ant
-                if antNum == 1:
+                if antNum == 0:
                     cv2.rectangle(image, A, C, (0,0,255))
-                if antNum == 2:
+                if antNum == 1:
                     cv2.rectangle(image, A, C, (0,0,0))
+
+                antNum += 1
+                cnt += 1
 
                 # Check if the keyPoint is inside any of the boxes
                 if (0 <= np.dot(vectorize(A,B), vectorize(A,M)) <= np.dot(vectorize(A,B), vectorize(A,B))) and \
@@ -168,23 +174,15 @@ while camera.isOpened():
                 # If it is outside, increment by one. This to make sure that it is trully outside as sometimes the ant could still be
                 # inside its box
                 else:
-                    print False
+                    # print False
                     outside = outside + 1
 
-            # For some reason, the outside need to match the keypoints. I need to check this further
-            if outside == len(keypoints):
-                print "RESET: ", frame
 
-                keyPointList = {}
+            if outside > len(boxes):
                 keyPointListTemp = {}
-                cnt2 = 0
-                for keyPoint2 in keypoints:
-                    x = int(keyPoint2.pt[0]) #i is the index of the blob you want to get the position
-                    y = int(keyPoint2.pt[1])
-                    M = [x,y]
-                    keyPointList[cnt2] = M
-                    cnt2 += 1
 
+                print "Reset Frame: ", frame
+                # exit()
                 print "Box Center: ", centerPointBox
                 print "Keypoints: ", keyPointList
 
@@ -201,18 +199,20 @@ while camera.isOpened():
                
                 print "Keypoints Temp: ", keyPointListTemp
 
-                    # if two points are the same, keep it as it was before
-                    # FOR NOW, I AM KEEPING JUST FOR THE FIRST ELEMTS. THIS NEES TO BE CHANGED ACCORDINGLY
-                    # Perhaps there is a Love Traingle or something similar. Might as well keep it as it is 
-                    # and document it
+                # if two points are the same, keep it as it was before
+                # FOR NOW, I AM KEEPING JUST FOR THE FIRST ELEMTS. THIS NEES TO BE CHANGED ACCORDINGLY
+                # Perhaps there is a Love Traingle or something similar. Might as well keep it as it is 
+                # and document it
                 if keyPointListTemp[0][0] == keyPointListTemp[1][0]:
-                    x1 = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
-                    y1 = int(keypoints[0].pt[1] - 5)
-                    bbox1 = (x, y, length,length)
-                    x = int(keypoints[1].pt[0] - 5) #i is the index of the blob you want to get the position
-                    y = int(keypoints[1].pt[1] - 5)
-                    bbox2 = (x1, y1, length,length)
-                    print "NORMAL"
+                    x = int(keypoints[0].pt[0] - 5) #i is the index of the blob you want to get the position
+                    y = int(keypoints[0].pt[1] - 5)
+                    bbox1 = (x, y, 15,15)
+                    x1 = int(keypoints[1].pt[1] - 5) #i is the index of the blob you want to get the position
+                    y1 = int(keypoints[1].pt[1] - 5)
+                    bbox2 = (x1, y1, 15,15)
+                    tracker = cv2.MultiTracker("KCF")
+                    ok = tracker.add(image, (bbox1,bbox2))
+                    ok, boxes = tracker.update(image)
                     # Need to print something out here in the file, because the reset is back to how it was
                         
 
@@ -220,17 +220,13 @@ while camera.isOpened():
                 else:
                     x = keyPointListTemp[0][0] - 5 #i is the index of the blob you want to get the position
                     y = keyPointListTemp[0][1] - 5
-                    bbox1 = (x, y, length,length)
+                    bbox1 = (x, y, 15,15)
                     x1 = keyPointListTemp[1][0] - 5 #i is the index of the blob you want to get the position
                     y1 = keyPointListTemp[1][1] - 5
-                    bbox2 = (x1, y1, length,length)
-                    print "The Other"
-
-
-                tracker = cv2.MultiTracker("KCF")
-                ok = tracker.add(image, (bbox1,bbox2))
-                ok, boxes = tracker.update(image)
-
+                    bbox2 = (x1, y1, 15,15)
+                    tracker = cv2.MultiTracker("KCF")
+                    ok = tracker.add(image, (bbox1,bbox2))
+                    ok, boxes = tracker.update(image)
                     
 
 
