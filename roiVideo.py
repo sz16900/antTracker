@@ -69,17 +69,33 @@ frame = 0
 # Start from frame 350 to avoid the third ant walking by
 camera.set(1,frame)
 
+
 ##################################################################################################
 
 def vectorize(A, B):
     return (B[0]-A[0],B[1]-A[1])
 
 ##################################################################################################
-
+roi = False
 while camera.isOpened():
+
 
     ok, image = camera.read()
     frame = frame + 1
+
+    if roi == False:
+        r = cv2.selectROI(image)
+        bbox = (r[0] - 5, r[1] - 5, length, length)
+        ok = tracker.add(image, bbox)
+        while True:
+            key2 = cv2.waitKey(1) or 0xff
+            if key2 == ord('p'):
+                r = cv2.selectROI(image)
+                bbox = (r[0] - 5, r[1] - 5, length, length)
+                ok = tracker.add(image, bbox)
+            if key2 == ord('q'):
+                break
+        roi = True
 
     # places the mask on the top left corner
     image[y_offset:y_offset+mask.shape[0], x_offset:x_offset+mask.shape[1]] = mask
@@ -87,26 +103,7 @@ while camera.isOpened():
     # Detect blobs per frame
     keypoints = detector.detect(image)
 
-    # First initializer
-    if opened <= 1:
-        for keyPoint in keypoints:
-            x = int(keyPoint.pt[0]) #i is the index of the blob you want to get the position
-            y = int(keyPoint.pt[1])
-            mp = np.array([[np.float32(x)],[np.float32(y)]])
-            meas.append((x,y))
-            opened = 2
-
-    if not ok:
-        print 'no image read'
-        break
-
-    if not init_once:
-        # add a list of boxes:
-        bbox1 = (meas[0][0] - 5, meas[0][1] - 5, length, length) 
-        bbox2 = (meas[1][0] - 5, meas[1][1] - 5, length, length)
-        ok = tracker.add(image, (bbox1,bbox2))
-        init_once = True
-
+    
     ok, boxes = tracker.update(image)
 
     centerPointBox = {}
