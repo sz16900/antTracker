@@ -4,7 +4,9 @@
     # Also, the boxes should have numbers displayed, to be able to adjust them
     # I think another window which displays the tracks (with a slider bar)
     # I think another window which displays the history of the movement of the bounding box (with a slider bar)
-    # Rewind video with slider 
+    # Rewind video with slider
+    # Need to test whether changing the tracker manually also overwrites the tracks.
+    # Start splitting file into different objects OOP oriented
 
 import numpy as np
 import cv2
@@ -57,9 +59,6 @@ length = 15
 width = 10
 frame = 0
 
-# Start from frame 350 to avoid the third ant walking by
-camera.set(1,frame)
-
 ##################################################################################################
 
 def vectorize(A, B):
@@ -73,14 +72,24 @@ cv2.moveWindow("Keypoints", 500,50);
 # Save tracks in a dictonary
 tracks = {}
 
-length = int(camera.get(cv2.CAP_PROP_FRAME_COUNT))
-print length 
+# This seems to crash my whole computer
+videoLength = int(camera.get(cv2.CAP_PROP_FRAME_COUNT))
+print videoLength 
+
+# Start from frame 350 to avoid the third ant walking by
+camera.set(1,frame)
 
 while camera.isOpened():
 
     ok, image = camera.read()
     frame = frame + 1
+    print "Frame:", frame
     key4 = cv2.waitKey(1)
+
+    # Stop video two frame before to avoid problems
+    if frame > (videoLength - 2):
+        print "Here"
+        break
 
     # Sets the frame in which to move to
     if key4 == ord('x'):
@@ -206,30 +215,32 @@ while camera.isOpened():
 
     # Show blobs
     im_with_keypoints = cv2.drawKeypoints(image, keypoints, np.array([]), (0,0,255), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
-    cv2.imshow("Keypoints", im_with_keypoints)
+    cv2.imshow("Keypoints", image)
     if not ok:
         break
 
-    # Stop video one frame before to avoid problems
-    # if length == frame - 1:
-    #     break
+
 
 ##################################################################################################
 
 camera.release()
-camera.destroyAllWindows()
+cv2.destroyAllWindows()
 
 ##################################################################################################
 # Write to file
 
-# file = open("tracks.txt","w+")
+file = open("tracks.txt","w+")
 
-# # Write the header of the file
-# file.write("FRAME   ID  X   Y\r\n")
+# Write the header of the file
+file.write("FRAME   ID  X   Y\r\n")
 
 # Bring the frame back to the beginning to be written onto file
-# frame = 1
-# for key, value in tracks.iteritems():
-#     print value
+frame = 1
+for key, value in tracks.iteritems():
+    count = 0
+    for valu in value:
+        file.write("%d %d %d %d\r\n" % (key, count, int(valu[0]), int(valu[1])))
+        count += 1
 
-# file.close()
+
+file.close()
