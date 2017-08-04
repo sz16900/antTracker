@@ -1,0 +1,136 @@
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Button, Slider
+
+#####################################Read File##################################
+
+f = open('tracksCopy.txt', 'r')
+f.next() # lets skip the header
+my_list = list()
+counter = 0
+for line in f:
+    counter = counter + 1
+f.close
+
+# This is to get the frames
+counter = counter / 2
+
+followerAnt = np.zeros(shape=(counter,2))
+leaderAnt = np.zeros(shape=(counter,2))
+counter = 0
+i = 0
+j = 0
+
+f = open('tracksCopy.txt', 'r')
+f.next() # lets skip the header
+for line in f:
+    counter = counter + 1
+    intList = map(float, line.strip().split())
+    my_list.append(intList[2])
+    my_list.append(intList[3])
+    if intList[1] == 0:
+      leaderAnt[i] = my_list
+      i = i + 1
+    elif intList[1] == 1:
+      followerAnt[j] = my_list
+      j += 1
+    del my_list[:]
+f.close()
+
+#########################Get Single Angle From Lines###########################
+
+# def dot(vA, vB):
+#     return vA[0]*vB[0]+vA[1]*vB[1]
+# def ang(lineA, lineB):
+#     # Get nicer vector form
+#     vA = [(lineA[0][0]-lineA[1][0]), (lineA[0][1]-lineA[1][1])]
+#     vB = [(lineB[0][0]-lineB[1][0]), (lineB[0][1]-lineB[1][1])]
+#     # Get dot prod
+#     dot_prod = dot(vA, vB)
+#     # Get magnitudes
+#     magA = dot(vA, vA)**0.5
+#     magB = dot(vB, vB)**0.5
+#     # Get cosine value
+#     cos_ = dot_prod/magA/magB
+#     # Get angle in radians and then convert to degrees
+#     angle = math.acos(dot_prod/magB/magA)
+#     # Basically doing angle <- angle mod 360
+#     ang_deg = math.degrees(angle)%360
+#
+#     if ang_deg-180>=0:
+#         # As in if statement
+#         return 360 - ang_deg
+#     else:
+#
+#         return ang_deg
+
+def ang(P1X,P1Y,P2X,P2Y,P3X,P3Y):
+   numerator = P2Y*(P1X-P3X) + P1Y*(P3X-P2X) + P3Y*(P2X-P1X)
+   denominator = (P2X-P1X)*(P1X-P3X) + (P2Y-P1Y)*(P1Y-P3Y)
+   print numerator
+   print denominator
+   if denominator != 0:
+     ratio = numerator/denominator
+     angleRad = math.atan(ratio);
+     angleDeg = (angleRad*180)/3.1416;
+     return angleDeg
+   # print angleDeg
+   # if angleDeg<0:
+   #     angleDeg = 180+angleDeg
+   #     return angleDeg
+
+print leaderAnt
+print followerAnt
+# exit()
+
+#########################Produce Angles#########################################
+
+arrayOfFifteensFollower = list()
+arrayOfFifteensLeader = list()
+i = 0
+
+# I dont know why I choose two, but it seems to work fine
+for i in range(0,len(followerAnt)):
+    # print "Iteration", i # Python is an interesting language (no concat?)
+    # print followerAnt[i]
+    arrayOfFifteensFollower.append(followerAnt[i])
+    arrayOfFifteensLeader.append(leaderAnt[i])
+
+i = 0
+
+arrayOfAngles = list()
+arrayOfAngles2 = list()
+for i in range(0, len(arrayOfFifteensLeader)-1):
+
+    # Follower points to leader
+    x = ang(arrayOfFifteensFollower[i][0], arrayOfFifteensFollower[i][1],
+    arrayOfFifteensFollower[i+1][0], arrayOfFifteensFollower[i+1][1],
+    arrayOfFifteensLeader[i][0], arrayOfFifteensLeader[i][1])
+
+
+    # Leader points to follower
+    y = ang(arrayOfFifteensLeader[i][0], arrayOfFifteensLeader[i][1],
+    arrayOfFifteensLeader[i+1][0], arrayOfFifteensLeader[i+1][1],
+    arrayOfFifteensFollower[i+1][0], arrayOfFifteensFollower[i+1][1])
+
+    # clean up the none values
+    if x is None:
+        print "None"
+
+    else:
+        arrayOfAngles.append(x)
+
+    if y is None:
+        print "None"
+
+    else:
+        arrayOfAngles2.append(y)
+
+print arrayOfAngles
+
+plt.hist(arrayOfAngles)
+plt.show()
+
+plt.hist(arrayOfAngles2)
+plt.show()

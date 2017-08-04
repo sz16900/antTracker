@@ -144,7 +144,7 @@ while camera.isOpened():
 # This is to check distances.
 # This distance is arbitrary. Here I am saying that if two boxes are too close, then reset.
     i = distance.euclidean(centerPointBox[0], centerPointBox[1])
-    if i < 3.0 and len(keypoints) == 2: 
+    if i < 5.0 and len(keypoints) == 2: 
 
         # https://math.stackexchange.com/questions/190111/how-to-check-if-a-point-is-inside-a-rectangle
         # https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not
