@@ -7,7 +7,7 @@ import pylab as pl
 
 #####################################Read File##################################
 
-f = open('tracks.txt', 'r')
+f = open('tracks1.txt', 'r')
 f.next() # lets skip the header
 my_list = list()
 counter = 0
@@ -24,7 +24,7 @@ counter = 0
 i = 0
 j = 0
 
-f = open('tracks.txt', 'r')
+f = open('tracks1.txt', 'r')
 f.next() # lets skip the header
 for line in f:
 
@@ -144,16 +144,20 @@ for i in range(0, len(arrayOfFifteensLeader)-1):
 # print "Max of Leader: ", max(arrayOfAngles2)
 # print "Mean - Max of Follower: ", np.mean(arrayOfAngles) - max(arrayOfAngles)
 # print "Mean - Max of Leader : ", np.mean(arrayOfAngles2) - max(arrayOfAngles2)
+# print "Standard Deviation of Follower: ", np.std(arrayOfAngles)
+# print "Standard Deviation of Leader: ", np.std(arrayOfAngles2)
 
-# mu, sigma = 0, 0.1 
-# count, bins, ignored = plt.hist(arrayOfAngles, 10, normed=True)
-# # plt.plot(bins, 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2) ), linewidth=2, color='r')
-# plt.show()
 
-# count, bins, ignored = plt.hist(arrayOfAngles2, 10, normed=True)
+mu, sigma = 0, 0.1 
+count, bins, ignored = plt.hist(arrayOfAngles, 10, normed=True)
+plt.plot(bins, 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2) ), linewidth=2, color='r')
+print "This", 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2))
+plt.show()
 
-# # plt.plot(bins, 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2) ), linewidth=2, color='r')
-# plt.show()
+count, bins, ignored = plt.hist(arrayOfAngles2, 10, normed=True)
+plt.plot(bins, 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2) ), linewidth=2, color='r')
+print "This", 1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2))
+plt.show()
 
 
 # plt.hist(arrayOfAngles)
