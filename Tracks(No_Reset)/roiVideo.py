@@ -13,7 +13,7 @@ import cv2
 from scipy.spatial import distance
 import sys
 
-camera = cv2.VideoCapture("/home/seth/host/00001.MTS")
+camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/00000.MTS")
 mask = cv2.imread('mask.png')
 algorithm = "KCF"
 tracker = cv2.MultiTracker(algorithm)
@@ -57,7 +57,7 @@ opened = 0
 # Bounding box parameters
 length = 15
 width = 10
-frame = 0
+frame = 200
 
 ##################################################################################################
 
@@ -85,6 +85,10 @@ while camera.isOpened():
     frame = frame + 1
     print "Frame:", frame
     key4 = cv2.waitKey(1)
+
+    # Stop video and write tracks to file
+    if key4 == ord('w'):
+        break
 
     # Stop video two frame before to avoid problems
     if frame > (videoLength - 2):
@@ -229,7 +233,7 @@ cv2.destroyAllWindows()
 ##################################################################################################
 # Write to file
 
-file = open("tracks.txt","w+")
+file = open("tracks3.txt","w+")
 
 # Write the header of the file
 file.write("FRAME   ID  X   Y\r\n")

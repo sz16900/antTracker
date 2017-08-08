@@ -1,0 +1,52 @@
+tracks.txt: 
+	
+	"The angles are taken from every 15 frames"
+
+	0 is Leader
+	1 is Follower
+
+	Mean of Follower:  4.34178435509
+	Mean of Leader:  -10.8974615063
+	Max of Follower:  83.6596126215
+	Max of Leader:  88.4923573076
+	Mean - Max of Follower:  -79.3178282664
+	Mean - Max of Leader :  -99.3898188139
+	Standard Deviation of Follower:  27.1673501405
+	Standard Deviation of Leader:  47.2493402454
+
+
+
+tracks2.txt: 
+
+	"The angles are taken from every 15 frames"
+
+	0 is Leader
+	1 is Follower
+
+	Mean of Follower:  -5.742112219
+	Mean of Leader:  -0.0824447308304
+	Max of Follower:  85.8485139824
+	Max of Leader:  88.9188678823
+	Mean - Max of Follower:  -91.5906262014
+	Mean - Max of Leader :  -89.0013126132
+	Standard Deviation of Follower:  25.1054765918
+	Standard Deviation of Leader:  47.680945273
+
+
+
+tracks3.txt:
+
+	"The angles are taken from every 15 frames"
+
+	0 is Leader
+	1 is Follower
+
+	Mean of Follower:  -3.43780588119
+	Mean of Leader:  -4.30893701233
+	Max of Follower:  88.8980860024
+	Max of Leader:  89.2149667736
+	Mean - Max of Follower:  -92.3358918836
+	Mean - Max of Leader :  -93.5239037859
+	Standard Deviation of Follower:  29.5198317321
+	Standard Deviation of Leader:  44.1745625085
+
