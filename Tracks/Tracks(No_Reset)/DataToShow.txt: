@@ -1,0 +1,106 @@
+
+
+tracks.txt: 
+	
+	"The angles are taken from every 15 frames"
+	"/home/seth/Host_AntVideos/glebExperiment/00001.MTS ---> Starting from frame 0"
+
+	0 is Leader
+	1 is Follower
+
+	Mean of Follower:  4.34178435509
+	Mean of Leader:  -10.8974615063
+	Max of Follower:  83.6596126215
+	Max of Leader:  88.4923573076
+	Mean - Max of Follower:  -79.3178282664
+	Mean - Max of Leader :  -99.3898188139
+	Standard Deviation of Follower:  27.1673501405
+	Standard Deviation of Leader:  47.2493402454
+
+
+
+tracks2.txt: 
+
+	"The angles are taken from every 15 frames"
+	"/home/seth/Host_AntVideos/glebExperiment/00001.MTS ---> Starting from frame 0"
+
+
+	0 is Leader
+	1 is Follower
+
+	Mean of Follower:  -5.742112219
+	Mean of Leader:  -0.0824447308304
+	Max of Follower:  85.8485139824
+	Max of Leader:  88.9188678823
+	Mean - Max of Follower:  -91.5906262014
+	Mean - Max of Leader :  -89.0013126132
+	Standard Deviation of Follower:  25.1054765918
+	Standard Deviation of Leader:  47.680945273
+
+
+
+tracks3.txt:
+
+	"The angles are taken from every 15 frames"
+	"/home/seth/Host_AntVideos/glebExperiment/00001.MTS ---> Starting from frame 0"
+
+
+	0 is Leader
+	1 is Follower
+
+	Mean of Follower:  -3.43780588119
+	Mean of Leader:  -4.30893701233
+	Max of Follower:  88.8980860024
+	Max of Leader:  89.2149667736
+	Mean - Max of Follower:  -92.3358918836
+	Mean - Max of Leader :  -93.5239037859
+	Standard Deviation of Follower:  29.5198317321
+	Standard Deviation of Leader:  44.1745625085
+
+
+
+tracks4.txt:
+
+	"The angles are taken from every 15 frames"
+	"/home/seth/Host_AntVideos/glebExperiment/00001.MTS ---> Starting from frame 200"
+
+	0 is Leader
+	1 is Follower
+
+	Mean of Follower:  4.57239467813
+	Mean of Leader:  -10.6863377868
+	Max of Follower:  89.0449505203
+	Max of Leader:  88.8063029083
+	Mean - Max of Follower:  -84.4725558422
+	Mean - Max of Leader :  -99.4926406951
+	Standard Deviation of Follower:  36.6164445375
+	Standard Deviation of Leader:  42.167863901
+
+
+
+tracks5.txt:
+
+	"The angles are taken from every 15 frames"
+	"/home/seth/Host_AntVideos/glebExperiment/00001.MTS ---> Starting from frame 200"
+
+	0 is Leader
+	1 is Follower
+
+
+	Mean of Follower:  -2.33639490298
+	Mean of Leader:  -2.33683878689
+	Max of Follower:  88.2283239438
+	Max of Leader:  88.2098831187
+	Mean - Max of Follower:  -90.5647188467
+	Mean - Max of Leader :  -90.5467219056
+	Standard Deviation of Follower:  29.4784445973
+	Standard Deviation of Leader:  36.0314065223
+
+
+tracks5.txt:
+
+	"The angles are taken from every 15 frames"
+	"/home/seth/Host_AntVideos/glebExperiment/00001.MTS ---> Starting from frame 500"
+
+	0 is Leader
+	1 is Follower

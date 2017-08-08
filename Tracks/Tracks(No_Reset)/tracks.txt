@@ -1,4 +1,4 @@
-FRAME   ID  X   Y
+FRAME   ID  X   Y (0 is Leader, 1 is Follower)
 1 0 638 666
 1 1 627 677
 2 0 638 666
