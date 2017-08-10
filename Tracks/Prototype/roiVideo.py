@@ -13,7 +13,7 @@ import cv2
 from scipy.spatial import distance
 import sys
 
-camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/00001.MTS")
+camera = cv2.VideoCapture("/home/seth/openCV_Tests/Exploring_openCV/antTracker/cut.mp4")
 mask = cv2.imread('mask.png')
 algorithm = "KCF"
 tracker = cv2.MultiTracker(algorithm)
@@ -34,7 +34,7 @@ params.maxThreshold = 200
 
 # Filter by Area.
 params.filterByArea = True
-params.minArea = 10
+params.minArea = 6
 
 # Filter by Circularity
 params.filterByCircularity = True
@@ -55,9 +55,9 @@ opened = 0
 ##################################################################################################
 
 # Bounding box parameters
-length = 12
+length = 14
 width = 10
-frame = 200
+frame = 0
 
 ##################################################################################################
 
@@ -78,6 +78,7 @@ print videoLength
 
 # Start from frame 350 to avoid the third ant walking by
 camera.set(1,frame)
+change = False
 
 while camera.isOpened():
 
@@ -85,6 +86,41 @@ while camera.isOpened():
     frame = frame + 1
     print "Frame:", frame
     key4 = cv2.waitKey(1)
+    change = False
+    intt = 0
+
+    if key4 == ord("r"):
+    	change = True
+    	keypoints = detector.detect(image)
+    	boxxxes = list()
+    	for newbox in boxes:
+    		bbox = (newbox[0], newbox[1], newbox[2], newbox[3])
+    		boxxxes.append(bbox)
+    	boxxxes_copy = boxxxes
+    	for keyPoint in keypoints:
+			x = int(keyPoint.pt[0]) #i is the index of the blob you want to get the position
+			y = int(keyPoint.pt[1])
+			M = [x,y]
+			innnt = 0
+			for newbox in boxxxes:
+				A = (int(newbox[0]) + 6, int(newbox[1]) + 6)
+				i = distance.euclidean(A, M)
+				if i < 12.0:
+					# bbox = (M[0]-6, M[1]-6, length, length)
+					# tracker = cv2.MultiTracker(algorithm)
+					# tracker.add(image, bbox)
+					# ok, boxes = tracker.update(image)
+					boxxxes_copy[innnt] = (M[0]-6, M[1]-6, length, length)
+				innnt += 1
+
+	if change == True:
+		tracker = cv2.MultiTracker(algorithm)
+        for bboxes in boxxxes_copy:
+            tracker.add(image, bboxes)
+        camera.set(1,frame)
+        ok, image = camera.read()
+        ok, boxes = tracker.update(image) 
+        change = False
 
     # Stop video and write tracks to file
     if key4 == ord('w'):
@@ -115,7 +151,7 @@ while camera.isOpened():
         while var != "done":
             var = int(var)
             r = cv2.selectROI(image)
-            boxess[var] = (r[0] - 5, r[1] - 5, length, length)
+            boxess[var] = (r[0] - 6, r[1] - 6, length, length)
             var = raw_input("Please enter the id of the ant to be re-adjusted: ")
         tracker = cv2.MultiTracker(algorithm)
         for bboxes in boxess:
@@ -192,10 +228,10 @@ while camera.isOpened():
 
         if cnt == 0:
             cv2.rectangle(image, A, C, (0,0,255))
-        if cnt == 1:
+        elif cnt == 1:
             cv2.rectangle(image, A, C, (0,255,0))
-        else: 
-            cv2.rectangle(image, A, C, (0,0,0))
+        else : 
+            cv2.rectangle(image, A, C, (255,255,0))
         
         cnt += 1
 

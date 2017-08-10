@@ -57,7 +57,7 @@ opened = 0
 # Bounding box parameters
 length = 12
 width = 10
-frame = 200
+frame = 0
 
 ##################################################################################################
 
@@ -78,6 +78,7 @@ print videoLength
 
 # Start from frame 350 to avoid the third ant walking by
 camera.set(1,frame)
+change = False
 
 while camera.isOpened():
 
@@ -85,6 +86,58 @@ while camera.isOpened():
     frame = frame + 1
     print "Frame:", frame
     key4 = cv2.waitKey(1)
+    change = False
+    intt = 0
+    velocity = (0,0)
+    predicted = (0,0)
+    print "Tracking: \n", tracks
+    pastTracks = list()
+
+    if key4 == ord("r"):
+    	change = True
+    	keypoints = detector.detect(image)
+    	boxxxes = list()
+    	for newbox in boxes:
+    		bbox = (newbox[0], newbox[1], newbox[2], newbox[3])
+    		boxxxes.append(bbox)
+    	boxxxes_copy = boxxxes
+    	innnt = 0
+    	boxInt = 0
+
+    	pastTracks = tracks[frame-6]
+    	print "pastTracks: ", pastTracks
+
+    	for newbox in boxxxes:
+			A = (int(newbox[0]) + 6, int(newbox[1]) + 6)
+			for keyPoint in keypoints:
+				x = int(keyPoint.pt[0]) #i is the index of the blob you want to get the position
+				y = int(keyPoint.pt[1])
+				M = [x,y]
+				valueInt = 0
+				for value in pastTracks:
+					velocity =  ((A[0] - value[0]), (A[1] - value[1]))
+					predicted = ((A[0] + velocity[0]), (A[1] + velocity[1]))
+					i = distance.euclidean(predicted, M)
+					print "M: ", M
+					print "predicted: ", predicted
+					if i < 15.0:
+						# bbox = (M[0]-6, M[1]-6, length, length)
+						# tracker = cv2.MultiTracker(algorithm)
+						# tracker.add(image, bbox)
+						# ok, boxes = tracker.update(image)
+						boxxxes_copy[innnt] = (M[0]-6, M[1]-6, length, length)
+					valueInt += 1
+
+				boxInt += 1
+			innnt += 1
+
+	if change == True:
+		tracker = cv2.MultiTracker(algorithm)
+        for bboxes in boxxxes_copy:
+            tracker.add(image, bboxes)
+        ok, image = camera.read()
+        ok, boxes = tracker.update(image) 
+        change = False
 
     # Stop video and write tracks to file
     if key4 == ord('w'):
@@ -115,7 +168,7 @@ while camera.isOpened():
         while var != "done":
             var = int(var)
             r = cv2.selectROI(image)
-            boxess[var] = (r[0] - 5, r[1] - 5, length, length)
+            boxess[var] = (r[0] - 6, r[1] - 6, length, length)
             var = raw_input("Please enter the id of the ant to be re-adjusted: ")
         tracker = cv2.MultiTracker(algorithm)
         for bboxes in boxess:

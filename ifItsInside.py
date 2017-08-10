@@ -61,7 +61,7 @@ opened = 0
 # Bounding box parameters
 length = 15
 width = 10
-frame = 0
+frame = 5
 
 # Start from frame 350 to avoid the third ant walking by
 camera.set(1,frame)
@@ -101,6 +101,7 @@ while camera.isOpened():
         # add a list of boxes:
         bbox1 = (meas[0][0] - 5, meas[0][1] - 5, length, length) 
         bbox2 = (meas[1][0] - 5, meas[1][1] - 5, length, length)
+        # bbox3 = (meas[2][0] - 5, meas[2][1] - 5, length, length)
         ok = tracker.add(image, (bbox1,bbox2))
         init_once = True
 
@@ -135,6 +136,9 @@ while camera.isOpened():
                 cv2.rectangle(image, A, C, (0,0,255))
             if antNum == 2:
                 cv2.rectangle(image, A, C, (0,0,0))
+            # else:
+            #     cv2.rectangle(image, A, C, (0,0,0))
+
        
             if (0 <= np.dot(vectorize(A,B), vectorize(A,M)) <= np.dot(vectorize(A,B), vectorize(A,B))) and \
                (0 <= np.dot(vectorize(B,C), vectorize(B,M)) <= np.dot(vectorize(B,C), vectorize(B,C))):
