@@ -57,7 +57,7 @@ opened = 0
 # Bounding box parameters
 length = 15
 width = 10
-frame = 900
+frame = 5437
 
 ##################################################################################################
 
@@ -66,8 +66,8 @@ def vectorize(A, B):
 
 ##################################################################################################
 roi = False
-cv2.namedWindow("Keypoints");
-cv2.moveWindow("Keypoints", 500,50);
+# cv2.namedWindow("Keypoints");
+# cv2.moveWindow("Keypoints", 500,50);
 
 # Save tracks in a dictonary
 tracks = {}
@@ -191,11 +191,9 @@ while camera.isOpened():
         centerPointBox[cnt] = [A[0]+7, A[1]+7]
 
         if cnt == 0:
-            cv2.rectangle(image, A, C, (0,0,255))
-        if cnt == 1:
-            cv2.rectangle(image, A, C, (0,255,0))
-        else: 
             cv2.rectangle(image, A, C, (0,0,0))
+        elif cnt == 1:
+            cv2.rectangle(image, A, C, (0,255,0))
         
         cnt += 1
 
@@ -233,7 +231,7 @@ cv2.destroyAllWindows()
 ##################################################################################################
 # Write to file
 
-file = open("tracks6.txt","w+")
+file = open("tracks5.txt","w+")
 
 # Write the header of the file
 file.write("FRAME   ID  X   Y (0 is Leader, 1 is Follower)\r\n")

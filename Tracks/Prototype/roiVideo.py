@@ -13,7 +13,7 @@ import cv2
 from scipy.spatial import distance
 import sys
 
-camera = cv2.VideoCapture("/home/seth/openCV_Tests/Exploring_openCV/antTracker/cut.mp4")
+camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/00001.MTS")
 mask = cv2.imread('mask.png')
 algorithm = "KCF"
 tracker = cv2.MultiTracker(algorithm)
@@ -34,7 +34,7 @@ params.maxThreshold = 200
 
 # Filter by Area.
 params.filterByArea = True
-params.minArea = 6
+params.minArea = 10
 
 # Filter by Circularity
 params.filterByCircularity = True
@@ -55,9 +55,9 @@ opened = 0
 ##################################################################################################
 
 # Bounding box parameters
-length = 14
+length = 12
 width = 10
-frame = 0
+frame = 16450
 
 ##################################################################################################
 
@@ -66,8 +66,8 @@ def vectorize(A, B):
 
 ##################################################################################################
 roi = False
-cv2.namedWindow("Keypoints");
-cv2.moveWindow("Keypoints", 500,50);
+# cv2.namedWindow("Keypoints");
+# cv2.moveWindow("Keypoints", 500,50);
 
 # Save tracks in a dictonary
 tracks = {}
@@ -105,7 +105,7 @@ while camera.isOpened():
 			for newbox in boxxxes:
 				A = (int(newbox[0]) + 6, int(newbox[1]) + 6)
 				i = distance.euclidean(A, M)
-				if i < 12.0:
+				if i < 8.0:
 					# bbox = (M[0]-6, M[1]-6, length, length)
 					# tracker = cv2.MultiTracker(algorithm)
 					# tracker.add(image, bbox)
@@ -269,7 +269,7 @@ cv2.destroyAllWindows()
 ##################################################################################################
 # Write to file
 
-file = open("tracks6.txt","w+")
+file = open("tracks8.txt","w+")
 
 # Write the header of the file
 file.write("FRAME   ID  X   Y (0 is Leader, 1 is Follower)\r\n")

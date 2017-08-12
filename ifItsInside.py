@@ -8,7 +8,7 @@ import cv2
 from scipy.spatial import distance
 
 
-camera = cv2.VideoCapture("/home/seth/openCV_Tests/Exploring_openCV/cut.mp4")
+camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/tandemRun1.webm")
 mask = cv2.imread('mask.png')
 tracker = cv2.MultiTracker("KCF")
 file = open("tracks.txt","w+")

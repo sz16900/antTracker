@@ -13,7 +13,7 @@ import cv2
 from scipy.spatial import distance
 import sys
 
-camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/00001.MTS")
+camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/00002.MTS")
 mask = cv2.imread('mask.png')
 algorithm = "KCF"
 tracker = cv2.MultiTracker(algorithm)
@@ -57,7 +57,7 @@ opened = 0
 # Bounding box parameters
 length = 15
 width = 10
-frame = 900
+frame = 590
 
 ##################################################################################################
 
@@ -66,8 +66,8 @@ def vectorize(A, B):
 
 ##################################################################################################
 roi = False
-cv2.namedWindow("Keypoints");
-cv2.moveWindow("Keypoints", 500,50);
+# cv2.namedWindow("Keypoints");
+# cv2.moveWindow("Keypoints", 500,50);
 
 # Save tracks in a dictonary
 tracks = {}
@@ -233,7 +233,7 @@ cv2.destroyAllWindows()
 ##################################################################################################
 # Write to file
 
-file = open("tracks6.txt","w+")
+file = open("tracks8.txt","w+")
 
 # Write the header of the file
 file.write("FRAME   ID  X   Y (0 is Leader, 1 is Follower)\r\n")

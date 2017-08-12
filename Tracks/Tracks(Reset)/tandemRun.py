@@ -9,7 +9,7 @@ import scipy.stats as stats
 import pylab as pl
 
 #####################################Read File##################################
-filename = "tracks3.txt"
+filename = "tracks4.txt"
 f = open(filename, 'r')
 f.next() # lets skip the header
 my_list = list()

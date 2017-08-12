@@ -8,7 +8,7 @@ import cv2
 from scipy.spatial import distance
 
 
-camera = cv2.VideoCapture("/home/seth/openCV_Tests/Exploring_openCV/cut.mp4")
+camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/tandem1.webm")
 mask = cv2.imread('mask.png')
 tracker = cv2.MultiTracker("KCF")
 file = open("tracks.txt","w+")
@@ -38,7 +38,7 @@ params.maxThreshold = 200
 
 # Filter by Area.
 params.filterByArea = True
-params.minArea = 10
+params.minArea = 2
 
 # Filter by Circularity
 params.filterByCircularity = True
@@ -59,7 +59,7 @@ opened = 0
 ##################################################################################################
 
 # Bounding box parameters
-length = 15
+length = 8
 width = 10
 frame = 0
 
