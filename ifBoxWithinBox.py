@@ -13,7 +13,7 @@ import cv2
 from scipy.spatial import distance
 
 
-camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/tandemRun2.webm")
+camera = cv2.VideoCapture("/home/seth/Host_AntVideos/Examples/edited_video/00001a.mp4")
 mask = cv2.imread('mask.png')
 algorithm = "KCF"
 tracker = cv2.MultiTracker(algorithm)

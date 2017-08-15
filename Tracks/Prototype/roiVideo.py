@@ -13,7 +13,7 @@ import cv2
 from scipy.spatial import distance
 import sys
 
-camera = cv2.VideoCapture("/home/seth/Host_AntVideos/glebExperiment/00001.MTS")
+camera = cv2.VideoCapture("/home/seth/Host_AntVideos/scouting/00000.MTS")
 mask = cv2.imread('mask.png')
 algorithm = "KCF"
 tracker = cv2.MultiTracker(algorithm)
@@ -57,7 +57,7 @@ opened = 0
 # Bounding box parameters
 length = 12
 width = 10
-frame = 16450
+frame = 500
 
 ##################################################################################################
 

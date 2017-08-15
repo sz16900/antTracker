@@ -9,7 +9,7 @@ import scipy.stats as stats
 import pylab as pl
 
 #####################################Read File##################################
-filename = "tracks18.txt"
+filename = "tracks10.txt"
 f = open(filename, 'r')
 f.next() # lets skip the header
 my_list = list()
@@ -37,6 +37,7 @@ for line in f:
 
   if "RESET" in line:
     break
+    print "Break"
 
   counter = counter + 1
   intList = map(float, line.strip().split())
@@ -58,8 +59,8 @@ f.close()
 def ang(P1X,P1Y,P2X,P2Y,P3X,P3Y):
    numerator = P2Y*(P1X-P3X) + P1Y*(P3X-P2X) + P3Y*(P2X-P1X)
    denominator = (P2X-P1X)*(P1X-P3X) + (P2Y-P1Y)*(P1Y-P3Y)
-   print numerator
-   print denominator
+   # print numerator
+   # print denominator
    if denominator != 0:
      ratio = numerator/denominator
      angleRad = math.atan(ratio);
@@ -112,13 +113,14 @@ def tandemrun(antInQuestion, pointingTo):
       pointingTo[i+15][0], pointingTo[i+15][1])
 
       if x is None:
-          print "None"
+          # print "None"
+          xxxxxx = 0
       else:
           arrayOfAngles.append(x)
 
-  print "Mean of Follower: ", np.mean(arrayOfAngles)
-  print "Max of Follower: ", max(arrayOfAngles)
-  print "Mean - Max of Follower: ", np.mean(arrayOfAngles) - max(arrayOfAngles)
+  # print "Mean of Follower: ", np.mean(arrayOfAngles)
+  # print "Max of Follower: ", max(arrayOfAngles)
+  # print "Mean - Max of Follower: ", np.mean(arrayOfAngles) - max(arrayOfAngles)
   print "Standard Deviation of Follower: ", np.std(arrayOfAngles)
 
   h = sorted(arrayOfAngles)

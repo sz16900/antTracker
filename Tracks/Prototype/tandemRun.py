@@ -27,22 +27,25 @@ counter = 0
 i = 0
 j = 0
 k = 0
+lead = 0
+follow = 1
 
 f = open(filename, 'r')
 f.next() # lets skip the header
 for line in f:
 
   if "RESET" in line:
-    break
+    lead = 1
+    follow = 0
 
   counter = counter + 1
   intList = map(float, line.strip().split())
   my_list.append(intList[2])
   my_list.append(intList[3])
-  if intList[1] == 0:
+  if intList[1] == lead:
     leaderAnt[i] = my_list
     i = i + 1
-  elif intList[1] == 1:
+  elif intList[1] == follow:
     followerAnt[j] = my_list
     j += 1
   elif intList[1] == 2:
@@ -125,8 +128,8 @@ def tandemrun(antInQuestion, pointingTo):
   pl.show() 
 
 tandemrun(arrayOfFifteensFollower, arrayOfFifteensLeader)
-tandemrun(arrayOfFifteensFollower, arrayOfFifteensThird)
+# tandemrun(arrayOfFifteensFollower, arrayOfFifteensThird)
 tandemrun(arrayOfFifteensLeader, arrayOfFifteensFollower)
-tandemrun(arrayOfFifteensLeader, arrayOfFifteensThird)
-tandemrun(arrayOfFifteensThird, arrayOfFifteensFollower)
-tandemrun(arrayOfFifteensThird, arrayOfFifteensLeader)
+# tandemrun(arrayOfFifteensLeader, arrayOfFifteensThird)
+# tandemrun(arrayOfFifteensThird, arrayOfFifteensFollower)
+# tandemrun(arrayOfFifteensThird, arrayOfFifteensLeader)

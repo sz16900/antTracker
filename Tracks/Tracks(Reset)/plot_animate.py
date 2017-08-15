@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, Slider
 
 #####################################Read File##################################
-filename = "tracks3.txt"
+filename = "tracks7.txt"
 f = open(filename, 'r')
 f.next() # lets skip the header
 my_list = list()
@@ -116,4 +116,4 @@ for i in range(len(leaderAnt) - 1):
     else:
         points.set_data(X, Y)
         points2 .set_data(A, B)
-    plt.pause(0.001)
+    plt.pause(0.0001)
